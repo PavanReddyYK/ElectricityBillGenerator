@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Sidebar 01</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link rel="stylesheet" href="../css/datatables.min.css" />  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="../css/adminStyle.css" />
+    <link rel="stylesheet" href="../css/datatables.min.css" />
+    <meta name="robots" content="noindex, follow" />
+  </head>
+  <body>
+    <div class="wrapper d-flex align-items-stretch tab-bar">
+      <nav id="sidebar">
+        <div class="p-4 pt-5">
+          <a
+            href="#admin"
+            data-toggle="collapse"
+            aria-expanded="false"
+            class="img logo rounded-circle mb-5"
+            style="background-image: url(../images/unknown.jpg)"
+          ></a>
+          <ul class="collapse list-unstyled" id="admin">
+            <li>
+              <a href="#" class="text-center font-weight-bolder">ADMIN</a>
+            </li>
+
+            <div class="container" id="adminUser"></div>
+            <li>
+              <a
+                href="#"
+                onclick="logout()"
+                style="color: red"
+                class="font-weight-bold text-center"
+                >Logout</a
+              >
+            </li>
+          
+
+          </ul>
+          <div class="sb-sidenav-menu-heading" style="border-bottom: 1px solid #ccc;">BILLS</div>         
+           <hr style="margin-bottom: 0;">
+          <ul class="list-unstyled components mb-5 tab-bar">
+            <li class="active" onclick="showTab('all')" id="allBills">
+              <a href="#">All Bills</a>
+            </li>
+            <li>
+              <a href="#" onclick="showTab('paid')" id="paidBills"
+                >Paid Bills</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showTab('pending')" id="pendingBills"
+                >Pending Bills</a
+              >
+            </li>
+          </ul>
+
+          <ul class="list-unstyled components mb-5 tab-bar">
+            <div class="sb-sidenav-menu-heading" style="border-bottom: 1px solid #ccc;">USERS</div>
+            <hr style="margin-bottom: 5px; margin-top: 0;">
+
+            <li>
+              <a href="#" onclick="showTab('allUser')" id="allUserBills"
+                >All Users</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                data-toggle="collapse"
+                aria-expanded="false"
+                onclick="showTab('paidUser')"
+                id="paidUserBills"
+                >Paid Users</a
+              >
+            </li>
+
+            <li>
+              <a href="#" onclick="showTab('pendingUser')" id="pendingUserBills"
+                >Pending Users</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                onclick="showTab('pendingMoreThan3Months')"
+                id="pendingMoreThan3MonthsBills"
+                >More Than Three Month Pendings</a
+              >
+            </li>
+          </ul>
+
+          <!-- <ul class="collapse list-unstyled" id="pageSubmenu">
+                <li>
+                  <a href="#">Page 1</a>
+                </li>
+                <li>
+                  <a href="#">Page 2</a>
+                </li>
+                <li>
+                  <a href="#">Page 3</a>
+                </li>
+              </ul> -->
+
+          <div
+            class="footer fixed-bottom mx-2 font-weight-bolder "
+            margin
+            id="foot-admin"
+          >
+            <!-- <p>
+              Copyright &copy;
+              <script>
+                document.write(new Date().getFullYear());
+              </script>
+              All rights reserved | This template is made with
+              <i class="icon-heart" aria-hidden="true"></i> 
+              <a href="https://colorlib.com" target="_blank">Colorlib.com</a>
+            </p> -->
+          </div>
+        </div>
+      </nav>
+
+      <div id="content" class="p-4 p-md-5">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="container-fluid">
+            <button
+              type="button"
+              data-toggle="collapse"
+              id="sidebarCollapse"
+              class="btn btn-primary"
+            >
+              <i class="fa fa-bars"></i>
+              <span class="sr-only">Toggle Menu</span>
+            </button>
+
+            <button
+              class="btn btn-primary d-inline-block ml-auto"
+              type="button"
+              id="generateBill"
+              onclick="generateBill()"
+              value="Generate Bill"
+            >
+            Generate Bill
+            </button>
+          </div>
+        </nav>
+        <div class="admin-content" id="allContent">
+          <h2 class="mb-4">All Bills</h2>
+          <table
+            class="table table-bordered table-responsive-sm"
+            id="datatablesSimpleBill"
+          >
+            <thead>
+              <tr>
+                <th>UserName</th>
+                <th>User ID</th>
+                <th>Meter No.</th>
+                <th>Bill ID</th>
+                <th>Amount</th>
+                <th>Consumption Units</th>
+                <th>Billing Date</th>
+                <th>Due Date</th>
+                <th>Payment Date</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="admin-content d-none" id="paidContent">
+          <h2 class="mb-4">Paid Bills</h2>
+          <table
+            class="table table-bordered table-responsive-sm"
+            id="datatablesSimpleBill1"
+          >
+            <thead>
+              <tr>
+                <th>UserName</th>
+                <th>User ID</th>
+                <th>Meter No.</th>
+                <th>Bill ID</th>
+                <th>Amount</th>
+                <th>Consumption Units</th>
+                <th>Billing Date</th>
+                <th>Payment Date</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="admin-content d-none" id="pendingContent">
+          <h2 class="mb-4">Pending Bills</h2>
+          <table
+            class="table table-bordered table-responsive-sm"
+            id="datatablesSimpleBill2"
+          >
+            <thead>
+              <tr>
+                <th>UserName</th>
+                <th>User ID</th>
+                <th>Meter No.</th>
+                <th>Bill ID</th>
+                <th>Amount</th>
+                <th>Consumption Units</th>
+                <th>Billing Date</th>
+                <th>Due Date</th>
+              </tr>
+            </thead>
+            <tbody id="paid-user"></tbody>
+          </table>
+        </div>
+
+        <div class="admin-content d-none" id="allUserContent">
+          <h2 class="mb-4">All User</h2>
+          <table
+            class="table table-bordered table-responsive-sm"
+            id="datatablesSimpleall"
+          >
+            <thead>
+              <tr>
+                <th>UserName</th>
+                <th>User ID</th>
+                <th>Phone No.</th>
+                <th>User Type</th>
+                <th>Pending Months</th>
+                <!-- <th>Payment Date</th> -->
+                <th>Info</th>
+              </tr>
+            </thead>
+            <tbody id="paid-user"></tbody>
+          </table>
+        </div>
+        <div class="admin-content d-none" id="paidUserContent">
+          <h2 class="mb-4">Paid User</h2>
+          <table
+            class="table table-bordered table-responsive-sm"
+            id="datatablesSimple"
+          >
+            <thead>
+              <tr>
+                <th>UserName</th>
+                <th>User ID</th>
+                <th>Phone No.</th>
+                <th>User Type</th>
+                <th>Pending Months</th>
+                <!-- <th>Payment Date</th> -->
+                <!-- <th>Info</th> -->
+              </tr>
+            </thead>
+            <tbody id="paid-user"></tbody>
+          </table>
+        </div>
+        <div class="admin-content d-none" id="pendingUserContent">
+          <h2 class="mb-4">Pending User</h2>
+          <table
+            class="table table-bordered table-responsive-sm"
+            id="datatablesSimple1"
+          >
+            <thead>
+              <tr>
+                <th>UserName</th>
+                <th>User ID</th>
+                <th>Phone No.</th>
+                <th>User Type</th>
+                <th>Pending Months</th>
+                <!-- <th>Due Date</th> -->
+                <!-- <th>Info</th> -->
+              </tr>
+            </thead>
+            <tbody id="not-paid"></tbody>
+          </table>
+        </div>
+        <div class="admin-content d-none" id="pendingMoreThan3MonthsContent">
+          <h2 class="mb-4">Pending More Than Three Months User</h2>
+          <table
+            class="table table-bordered table-responsive-sm"
+            id="datatablesSimple2"
+          >
+            <thead>
+              <tr>
+                <th>UserName</th>
+                <th>User ID</th>
+                <th>Phone No.</th>
+                <th>User Type</th>
+                <th>Pending Months</th>
+                <!-- <th>Due Date</th> -->
+                <th>Disable/Enable</th>
+              </tr>
+            </thead>
+            <tbody id="3-month"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- -------------------------------------------------------MODAL CONTENT --------------------------------------------------------------------------------- -->
+    <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="userModalLabel">User Details</h5>
+                  <button type="button" class="close" data-dismiss="modal" onclick="closeButton()" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <!-- Place your user details content here -->
+                  <table class="table table-striped-columns">
+                      <thead>
+                          <th>User Details</th>
+                      </thead>
+                      <tbody id="userDetailsModal">
+                          
+                      </tbody>
+                  </table>
+
+                  <table>
+                    <tr>
+                        <td id="before" style="display: inline-block" >
+                    <input type="button" name="button" id="button" value="Edit" class="btn btn-primary" onclick="editUser()">&nbsp;&nbsp;
+                    <input type="button" name="button" id="button" value="Delete" class="btn btn-warning" onclick="deleteUser()"><br>
+            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="after" style="display: none;">
+                    <input type="button" name="button" id="button" value="Save" class="btn btn-success" onclick="saveUser()" >&nbsp;&nbsp;
+                    <input type="button" name="button" id="button" value="Cancel" class="btn btn-danger" onclick="cancelUser()"></td>
+                    </tr>
+                </table>
+
+              </div>
+
+
+              <div class="modal-footer">
+                
+                  <!-- You can place buttons here if needed -->
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeButton()">Close</button>
+              </div>
+          </div>
+      </div>
+  </div>
+    <!-- ---------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../js/popper.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script> -->
+    <script src="../js/datatables.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script> -->
+    <script src="../js/dashboard.js"></script>
+    <!-- <script src="../js/jquery.min.js"></script> -->
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    <!-- <script src="https://cdn.datatables.net/1.11.10/js/jquery.dataTables.min.js"></script> -->
+    <!-- <script src="../js/popper.js"></script> -->
+    <!-- <script src="../js/bootstrap.min.js"></script> -->
+    <script src="../js/main.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script> -->
+    <!-- <script src="../datatables.min.js"></script> -->
+    <!-- <script src="../js/dashboard.js"></script> -->
+    <!-- <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js/v8b253dfea2ab4077af8c6f58422dfbfd1689876627854"
+      integrity="sha512-bjgnUKX4azu3dLTVtie9u6TKqgx29RBwfj3QXYt5EKfWM/9hPSAI/4qcV5NACjwAo8UtTeWefx6Zq5PHcMm7Tg=="
+      data-cf-beacon='{"rayId":"7f3528373ca73c00","token":"cd0b4b3a733644fc843ef0b185f98241","version":"2023.7.0","si":100}'
+      crossorigin="anonymous"
+    ></script> -->
+
+    <script>
+
+
+    </script>
+  </body>
+</html>

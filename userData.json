@@ -1,0 +1,93 @@
+[
+  {
+    "user_id": 23340766342,
+    "user_name": "Rahul Mehta",
+    "user_address": "#11, Brigade Road, Bangalore, Karnataka",
+    "user_phone": "8248867484",
+    "user_password": "Random#456",
+    "user_type": "consumer",
+    "block_status": 1
+  },
+  {
+    "user_id": 40516473850,
+    "user_name": "Aarav Kumar",
+    "user_address": "#98, Jubilee Hills, Hyderabad, Telangana",
+    "user_phone": "2109876543",
+    "user_password": "SecurePassword!1",
+    "user_type": "consumer",
+    "block_status": 0
+  },
+  {
+    "user_id": 89835087297,
+    "user_name": "Kiran Reddy",
+    "user_address": "#30, Connaught Place, New Delhi",
+    "user_phone": "1234567890",
+    "user_password": "SecurePassword!1",
+    "user_type": "admin",
+    "block_status": 1
+  },
+  {
+    "user_id": 52990854610,
+    "user_name": "Isha Gupta",
+    "user_address": "#32, Nehru Place, New Delhi",
+    "user_phone": "8765432109",
+    "user_password": "Secure123!",
+    "user_type": "admin",
+    "block_status": 0
+  },
+  {
+    "user_id": 22368610665,
+    "user_name": "Tanvi Chawla",
+    "user_address": "#32, Nehru Place, New Delhi",
+    "user_phone": "7654321098",
+    "user_password": "SecurePassword!1",
+    "user_type": "consumer",
+    "block_status": 1
+  },
+  {
+    "user_id": 71825713439,
+    "user_name": "Dev Verma",
+    "user_address": "#76, Church Street, Chennai, Tamil Nadu",
+    "user_phone": "9876543210",
+    "user_password": "P@$$w0rd!Abc",
+    "user_type": "consumer",
+    "block_status": 0
+  },
+  {
+    "user_id": 87449876983,
+    "user_name": "Ananya Singh",
+    "user_address": "#123, Main Road, Bangalore, Karnataka",
+    "user_phone": "2109876543",
+    "user_password": "SecurePassword!1",
+    "user_type": "admin",
+    "block_status": 1
+  },
+  {
+    "user_id": 37013457642,
+    "user_name": "Kiran Reddy",
+    "user_address": "#123, Main Road, Bangalore, Karnataka",
+    "user_phone": "6543210987",
+    "user_password": "12345qwerty!",
+    "user_type": "consumer",
+    "block_status": 1
+  },
+  {
+    "user_id": 72212441062,
+    "user_name": "Aarav Kumar",
+    "user_address": "#45, Park Street, Kolkata, West Bengal",
+    "user_phone": "9876543210",
+    "user_password": "Random#456",
+    "user_type": "admin",
+    "block_status": 0
+  },
+  {
+    "user_id": 49719373771,
+    "user_name": "Ananya Singh",
+    "user_address": "#76, Church Street, Chennai, Tamil Nadu",
+    "user_phone": "3210987654",
+    "user_password": "P@ssw0rd123",
+    "user_type": "admin",
+    "block_status": 0
+  }
+]
+

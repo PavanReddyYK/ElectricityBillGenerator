@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login</title>
+  <!-- Add Bootstrap CSS link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./css/login.css">
+  <!-- Add your custom CSS for the admin login page layout -->
+  <style>
+    /* Customize the look and feel here */
+    /* ... Your custom styles ... */
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <form class="login-form">
+      <div class="login-header">Admin Login</div>
+      <div class="form-group">
+        <input type="tel" id="phone" class="form-input" placeholder="Phone Number" required>
+        <div class="invalid-feedback" id="phoneFeedback">Phone Number is required.</div>
+      </div>
+      <div class="form-group">
+        <input type="password" id="password" class="form-input" placeholder="Password" required>
+        <div class="invalid-feedback" id="passwordFeedback">Password is required.</div>
+      </div>
+      <div class="form-group">
+        <button type="button" class="login-button" onclick="validateForm()">Login</button>
+      </div>
+      <div class="form-group text-center">
+        <a href="#" class="back-button" onclick="consumerLogin()">Back to consumer Login</a>
+      </div>
+      <div id="invalid"></div>
+    </form>
+  </div>
+  
+  <!-- Add your custom JavaScript here -->
+  <script src="../js/adminLogin.js">
+    
+
+
+  </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+</body>
+</html>
