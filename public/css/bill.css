@@ -1,0 +1,43 @@
+body {
+  font-family: Arial, sans-serif;
+}
+.bill-container {
+  width: 708px;
+  margin: 45px auto;
+  padding: 25px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px black;
+}
+.header {
+  text-align: center;
+}
+.bill-details div {
+  flex-basis: 33%;
+}
+.bill-items {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+.bill-items th,
+.bill-items td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+.total-amount {
+  text-align: center;
+}
+.footer {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 40px;
+}
+a{  
+    text-decoration: none;
+}
+#downloadBill{
+  display: flex;
+  justify-content: end;
+
+}

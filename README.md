@@ -1,1 +1,1 @@
-# ElectricityBillGenerator
+# DemoProject

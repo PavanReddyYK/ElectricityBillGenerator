@@ -1,0 +1,55 @@
+body{
+    background-color:white;
+    margin-top:20px;
+    height: 100vh;
+}
+h3{
+    text-align: center;
+    font-family: 'Verdana, sans-serif';
+    font-style: oblique;
+}
+.first{
+    border-right: 2px solid #e4dddd;
+    border-left: 2px solid #e8e1e1;
+    
+}
+.col-5{
+    max-width: 11.666667%;
+    border-color: 2px solid blue;
+}
+#range{
+    padding: 37px;
+    border: 2px solid ;
+}
+#button{
+    margin-left: 90px;
+    padding: revert;
+}
+.col-lg-3{
+    background-color: #F8EFBA;
+    padding: 11px;
+    height: fit-content;
+}
+.col-lg-9,.table
+{
+    background-color:#ffffff;
+    color: black;
+    
+}
+.col-lg-9{
+    box-shadow: 0px 0px 10px royalblue
+}
+.card{
+    border: 2px solid red;
+}
+.buttons{
+    position: absolute;
+    border: 2px solid black;
+    width : max-content;
+    top: 74vh;
+    left: 57vw    
+}
+.pagination {
+    position: relative;
+    top: 25px;
+}
