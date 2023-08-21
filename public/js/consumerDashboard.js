@@ -162,3 +162,19 @@ function payment(billId) {
     }
   );
 }
+function logoutConsumer(){
+  const sid = sessionStorage.getItem('sid')
+  console.log(sid)
+
+  $.post('/logout',{
+    session : sid
+  },
+  (data)=>{
+    if(data=='OK'){
+      // alert(`Logged out successfully`)
+      window.location='http://localhost:4000/'
+      sessionStorage.removeItem('sid')
+    }
+  }
+  )
+}

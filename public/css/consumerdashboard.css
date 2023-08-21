@@ -53,3 +53,10 @@ h3{
     position: relative;
     top: 25px;
 }
+#logout{
+    float: right ;
+    font-size: large;
+    margin: 4vh;
+    /* color: white; */
+
+}
