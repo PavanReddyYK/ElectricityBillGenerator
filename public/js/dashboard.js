@@ -3,9 +3,7 @@
   let userDetails;
 
   document.addEventListener('DOMContentLoaded', event =>{
-    console.log('hi im woriking')
     const session = sessionStorage.getItem('sid')
-
 
     $.post('/filterData',{
       session : session
@@ -67,6 +65,8 @@
     const pendingBillsData = $('#datatablesSimpleBill2').DataTable(dataTableOptions);
     pendingBillsData.clear().rows.add(pendingBills).draw();
 
+    // Add CSS class to center the content in DataTable cells
+$('.dataTables_wrapper table').addClass('text-center'); // This class aligns the content within cells to the center
   }
   //---------------------------------------------------------------------
 
@@ -75,20 +75,16 @@
     $.post('/generate',{
        date : date
     },(data)=>{
-      const response = confirm("Are you going to Generate Bill?")
+      const response = confirm("Do you want to Generate Bill?")
       if(response){
         if(data){
-          console.log('success')
+          alert(`Bill Generated Successful`)
           const session = sessionStorage.getItem('sid')
           window.location.href = `/dashboard?s=${session}`
         }else{
           alert("Bills are not Generated.");
-          console.log('Bills is not Generated');
         }
-      }else{
-        console.log('failed Generate Bills')
       }
-        
     })
 }
 
@@ -98,19 +94,19 @@
     for(let user of userDetails){
       if(user.user_id == user_id){
         const details = `<tr>
-        <th><label for="name">Name</label></th>
+        <th><label for="user_name">Name</label></th>
         <td><input type="text" name="" id="user_name" value="${user.user_name}" disabled></td>
     </tr>
     <tr>
-        <th><label for="name">User ID</label></th>
+        <th><label for="user_id">User ID</label></th>
         <td><input type="text" name="" id="user_id" value="${user.user_id}" disabled></td>
     </tr>
     <tr>
-        <th><label for="name">Phone</label></th>
+        <th><label for="user_phone">Phone</label></th>
         <td><input type="tel" name="" id="user_phone" value="${user.user_phone}" disabled></td>
     </tr>
     <tr>
-        <th><label for="name">Address</label></th>
+        <th><label for="user_address">Address</label></th>
         <td><textarea name="user_address" id="user_address" cols="25" rows="3" disabled>${user.user_address}</textarea></td>
     </tr>`;
 
@@ -121,9 +117,7 @@
     $('#userModal').modal('show');
 }
 
-
 function closeButton(){
-  
   document.getElementById('after').style.display = 'none'
   document.getElementById('before').style.display = 'inline-block'
 }
@@ -134,7 +128,6 @@ function editUser(){
   document.getElementById('user_address').removeAttribute('disabled')
   document.getElementById('after').style.display = 'inline-block'
   document.getElementById('before').style.display = 'none'
-  
 }
 
 function saveUser(){
@@ -160,12 +153,11 @@ function saveUser(){
 }
 
 function cancelUser(){
-  document.getElementById('user_name').disabled = true
-  document.getElementById('user_address').disabled = true
-  document.getElementById('user_phone').disabled = true
+  const user_id =document.getElementById('user_id').value
+  showUserInfoModal(user_id)
   document.getElementById('after').style.display = 'none'
   document.getElementById('before').style.display = 'inline-block'
-  // location.reload()
+  
 }
 
 function deleteUser(){
@@ -176,12 +168,14 @@ function deleteUser(){
           user_id : user_id
       },
       (data)=>{
-          console.log(data)
           const sessionId = sessionStorage.getItem('sid');
           window.location=`/adminDashboard?s=${sessionId}`
       })
   }else{
-      location.reload();
+    const user_id =document.getElementById('user_id').value
+    showUserInfoModal(user_id)
+    document.getElementById('after').style.display = 'none'
+    document.getElementById('before').style.display = 'inline-block'
   }
  
 }
@@ -207,7 +201,6 @@ function deleteUser(){
 
   
     for (const user of data) {
-
 
       allUser.push([user.user_name, user.user_id, user.user_phone, user.user_type, user.pending, '<button type="button" class="btn btn-info" onclick="showUserInfoModal('+user.user_id+')">Info</button>']);
 
@@ -245,7 +238,6 @@ function deleteUser(){
     moreThan3Table.clear().rows.add(moreThan3Data).draw();
 
   }
-
 
   //---------------------------------------------NOT USING THIS-------------------------------------------------------------------------
 
@@ -465,7 +457,7 @@ function deleteUser(){
     (data)=>{
       if(data){
         sessionStorage.clear()
-        window.location.href = '/admin'
+        window.location.href = '/'
       }
     })
   }

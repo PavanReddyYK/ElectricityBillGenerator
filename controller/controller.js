@@ -2,11 +2,11 @@ const helper = require('../helper/helper.js');
 const {uuid} = require('uuidv4');
 const puppeteer = require("puppeteer");
 
-const admin = (req,res)=>{
+const login = (req,res)=>{
     res.render('adminLogin.html')
 }
 
-const adminLogin = (req,res)=>{
+const loginPage = (req,res)=>{
     const phone = req.body.phone;
     const password = req.body.password;
     const data = {
@@ -16,9 +16,8 @@ const adminLogin = (req,res)=>{
     };
     helper.selectData(data,(result)=>{
         if(result.length==1){
-            if(result[0].user_type == 'admin'){
                 const userid = result[0].user_id;
-                // console.log(userid)
+                const userType = result[0].user_type=='admin'?true:false
                 const data = {
                     select:'*',
                     table : 'session_info',
@@ -27,20 +26,18 @@ const adminLogin = (req,res)=>{
                 helper.selectData(data,(session)=>{
                     if(session.length==1){
                         const session_id = session[0].session_id;
-                        res.json({session:session_id,isAdmin:true,isValid : true});
+                        res.json({session:session_id, isAdmin:userType, isValid : true});
                     }else{
                         if(session.length==0){
                             const sessionId = uuid();
-                            // console.log(sessionId)
                             const data = {
                                 table : "session_info",
                                 columns : "session_id , user_id",
                                 values : `"${sessionId}" , ${result[0].user_id}`
                             }
-
                             helper.insertData(data,(insertResult)=>{
                                 if(insertResult){
-                                    res.send({session :sessionId,isAdmin:true,isValid:true})
+                                    res.send({session :sessionId, isAdmin:userType, isValid:true})
                                 }else{
                                     res.sendStatus(500);
                                 }
@@ -48,13 +45,7 @@ const adminLogin = (req,res)=>{
                         }
                     }
                 })
-            }else{
-                // console.log('not a admin')
-                res.json({isAdmin : false,isValid : true})
-            }
-            
         }else{
-            // console.log("invalid credentials")
             res.json({isValid : false});
         }
     })
@@ -79,47 +70,6 @@ const dashboard = (req,res)=>{
             }
         }else{
             res.render('adminLogin.html');
-        }
-    })
-}
-
-const billDetails = (req,res) =>{
-    const session_id = req.body.session;
-    const data= {
-        user_select : '*',
-        user_table_name : 'user_info',
-        condition_user : `user_id `,
-        session_select : 'user_id',
-        session_table_name : 'session_info',
-        condition_session : `session_id = "${session_id}"` 
-    }
-
-    helper.sessionValidation(data, (result)=>{
-        if(result.length == 1){
-            const user_id = result[0].user_id;
-            if(result[0].user_type == 'admin'){
-                const user_data = {
-                    select : 'user_name,user_id,user_phone,user_address,block_status',
-                    table : 'user_info'
-                }
-                helper.fetchData(user_data,(userResult)=>{
-                    const billData = {
-                        select : '*',
-                        table : 'bill_info',
-                    }
-                    helper.fetchData(billData, (billResult)=>{
-                        res.send({
-                            info : billResult,
-                            user : userResult,
-                            admin_id : user_id
-                        });
-                    })
-                })
-            }else{
-                res.render('adminLogin.html')
-            }
-        }else{
-            res.render('adminLogin.html')
         }
     })
 }
@@ -374,64 +324,6 @@ const calculateElectricityBill = (unitsConsumed =>{
     }
 })
 
-// consumer controllers --------------------------------------------------------------------------------------------------------
-
-
-const consumerLogin = (req, res) => {
-    const phone = req.body.phone;
-    const password = req.body.password;
-    const data = {
-      select: "*",
-      table: "user_info",
-      condition: `user_phone = ${phone} && user_password = '${password}'`,
-    };
-  
-    helper.selectData(data, (result) => {
-  
-      if (result.length == 1) {
-            if(result[0].block_status==0)
-            {
-                const userid = result[0].user_id;
-                const session_data = {
-                select: "*",
-                table: "session_info",
-                condition: `user_id = ${userid}`,
-                };
-                
-                helper.selectData(session_data, (session) => {
-                if (session.length == 1) {
-                    const session_id = session[0].session_id;
-                    res.send(session_id);
-                } else {
-                    if (session.length == 0) {
-                    const sessionId = uuid();
-                    const new_session_data = {
-                        table: "session_info",
-                        columns: "session_id,user_id",
-                        values: `"${sessionId}","${result[0].user_id}"`,
-                    };
-                    helper.insertData(new_session_data, (success) => {
-                        if (success) {
-                        res.send(sessionId);
-                        } else {
-                        res.sendStatus(500);
-                        }
-                    });
-                    }
-                }
-                });
-            }
-            else{
-                // console.log("Blocked")
-                res.send({block:true})
-            }
-        } else {
-                    // console.log("invalid credentials");
-                    res.send({valid:false})
-            }
-    });
-  };
-  
   const consumerDashboard = (req, res) => {
     const sessionId = req.query.s;
     const userdata = {
@@ -444,7 +336,7 @@ const consumerLogin = (req, res) => {
     };
     helper.sessionValidation(userdata, (result) => {
       if (result.length == 1) {
-        res.render("consumerdashboard.html");
+        res.render("ConsumerDashboard.html");
       } else {
         res.sendStatus(500);
       }
@@ -566,10 +458,9 @@ const displayBill = (req, res) => {
 
 
 module.exports = {
-    admin,
-    adminLogin,
+    login,
+    loginPage,
     dashboard,
-    billDetails,
     logout,
     disableEnable,
     filterData,
@@ -577,7 +468,6 @@ module.exports = {
     saveUsers,
     deleteUser,
     generateBill,
-    consumerLogin,
     consumerDashboard,
     fetchUser,
     fetchBills,
