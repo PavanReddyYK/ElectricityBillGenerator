@@ -11,6 +11,7 @@ function validateForm() {
     document.getElementById('password').classList.add('is-invalid');
     document.getElementById('passwordFeedback').innerText = 'Password is required';
     document.getElementById('passwordFeedback').style.display = 'block';
+    document.getElementById('invalid').style.display = 'none'
 
     return false;
   }
@@ -23,6 +24,7 @@ function validateForm() {
 
     document.getElementById('password').classList.remove('is-invalid');
     document.getElementById('passwordFeedback').style.display = 'none';
+    document.getElementById('invalid').style.display = 'none'
 
     return false;
   }
@@ -34,12 +36,15 @@ function validateForm() {
     document.getElementById('passwordFeedback').style.display = 'block';
 
     document.getElementById('phone').classList.remove('is-invalid');
-    document.getElementById('phoneFeedback').style.display = 'none';
+    document.getElementById('phoneFeedback').style.display = 'none';  
+    document.getElementById('invalid').style.display = 'none'
 
+    if (phone.length !== 10) {
+      document.getElementById('phoneFeedback').style.display = 'block';  
+      document.getElementById('phoneFeedback').innerText = 'Phone number should be 10 digits.';
+    }
     return false;
   }
-
-  // Check if phone has 10 digits
   else if (phone.length !== 10) {
     document.getElementById('phone').classList.add('is-invalid');
     document.getElementById('phoneFeedback').innerText = 'Phone number should be 10 digits.';
@@ -47,18 +52,7 @@ function validateForm() {
 
     document.getElementById('password').classList.remove('is-invalid');
     document.getElementById('passwordFeedback').style.display = 'none';
-
-    return false;
-  }
-
-  // Check if password has more than 10 characters
-  else if (password.length > 10) {
-    document.getElementById('password').classList.add('is-invalid');
-    document.getElementById('passwordFeedback').innerText = 'Password should be 10 characters or less.';
-    document.getElementById('passwordFeedback').style.display = 'block';
-
-    document.getElementById('phone').classList.remove('is-invalid');
-    document.getElementById('phoneFeedback').style.display = 'none';
+    document.getElementById('invalid').style.display = 'none'
 
     return false;
   }
@@ -70,22 +64,21 @@ function validateForm() {
   document.getElementById('passwordFeedback').style.display = 'none';
 
   // Send the login request
-  $.post('/adminLogin', {
+  $.post('/loginPage', {
     phone: phone,
     password: password
   }, (data) => {
-    // console.log(data)
     const invalid = document.getElementById('invalid')
     if (data.isValid) {
+      sessionStorage.setItem('sid', data.session);
       if (!data.isAdmin) {
-        invalid.innerText = "Consumer can't login here, Go Back"
+        console.log("first")
+        window.location.href=`/consumerDashboard?s=${data.session}`
       } else {
-        // console.log('I am an admin')
-        const sessionId = data.session;
-        sessionStorage.setItem('sid', sessionId);
-        window.location.href = `/adminDashboard?s=${sessionId}`
+        window.location.href = `/adminDashboard?s=${data.session}`
       }
     } else {
+      invalid.style.display='block'
       invalid.innerText = "Invalid Credentials.."
     }
   }).fail((xhr) => {
@@ -94,8 +87,4 @@ function validateForm() {
 
   // Prevent the form from submitting by returning false
   return false;
-}
-
-function consumerLogin(){
-  window.location.href ='/'
 }

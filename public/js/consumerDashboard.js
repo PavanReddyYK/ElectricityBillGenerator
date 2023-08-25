@@ -174,6 +174,7 @@ function logoutConsumer(){
       // alert(`Logged out successfully`)
       window.location='http://localhost:4000/'
       sessionStorage.removeItem('sid')
+      sessionStorage.removeItem('uid')
     }
   }
   )
