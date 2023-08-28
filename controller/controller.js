@@ -262,13 +262,35 @@ const deleteUser =(req,res)=>{
     })
 }
 
-
 const generateBill = (req,res)=>{
-    const date = req.body.date;
+    // const date = req.body.date;
+    let date = new Date().toISOString().slice(0,10)
+    let month =date.slice(5,7)
+    let year =date.slice(0,4)
     const session = req.body.session;
-
-    const data= {
-        user_select : '*',
+    data={
+        column_name:'bill_generated_date',
+  
+        table_name:'bill_info',
+  
+        order_column:'bill_generated_date',
+  
+        order:'desc',
+  
+        limit:1
+    }
+    helper.order1(data,(result)=>{
+        
+        if (result.length==1){
+            
+            let db_data=result[0].bill_generated_date
+            console.log(db_data.slice(0,4),year ,db_data.slice(5,7),month);
+            if (db_data.slice(0,4)==year && db_data.slice(5,7)==month){
+                console.log("hi")
+                res.send({status:false})
+            }else{
+                const data= {
+                   user_select : '*',
         user_table_name : 'user_info',
         condition_user : `user_id `,
         session_select : 'user_id',
@@ -301,23 +323,22 @@ const generateBill = (req,res)=>{
                                 bill_generated_date:`${date}`,
                                 bill_due_date:`${year}-${month}-${day}`,
                                 consumption_units:consumption,
-                                amount_due:calculateElectricityBill(consumption),
+                                amount_due:(110+ parseInt(calculateElectricityBill(consumption)))+(100+ parseInt(calculateElectricityBill(consumption)))*0.09,
                                 paid_status:status,
-                                paid_date:'not paid'
+                                paid_date:'not paid',
+                                tax:(110+ parseInt(calculateElectricityBill(consumption)))*0.09
                             }
                         const insertBill = {
                             table : 'bill_info',
-                            columns : 'bill_id,user_id,meter_num,bill_generated_date,consumption_units,bill_due_date,amount_due,paid_status,paid_date',
-                            values : `'${data.bill_id}',${data.user_id},${data.meter_num},'${data.bill_generated_date}',${data.consumption_units},'${data.bill_due_date}',${data.amount_due},${data.paid_status},'${data.paid_date}'`
+                            columns : 'bill_id,user_id,meter_num,bill_generated_date,consumption_units,bill_due_date,amount_due,paid_status,paid_date,tax',
+                            values : `'${data.bill_id}',${data.user_id},${data.meter_num},'${data.bill_generated_date}',${data.consumption_units},'${data.bill_due_date}',${data.amount_due},${data.paid_status},'${data.paid_date}',${data.tax}`
                         }
                         helper.insertData(insertBill,(insResult)=>{
             
                         });
                     } 
-                    res.sendStatus(200);
+                    res.send({status:true});
                 })
-
-
             }else{
                 res.render('adminLogin.html');
             }
@@ -325,6 +346,14 @@ const generateBill = (req,res)=>{
             res.render('adminLogin.html');
         }
     })
+            }
+        }else{
+            res.sendStatus(400)
+        }
+    })
+  
+    
+    
 
 }
 

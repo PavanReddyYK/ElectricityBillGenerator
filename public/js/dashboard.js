@@ -94,14 +94,18 @@ $('.dataTables_wrapper table').addClass('text-center'); // This class aligns the
        date : date,
        session:session
     },(data)=>{
+      console.log(data)
       const response = confirm("Do you want to Generate Bill?")
       if(response){
         if(data){
+          if(!data.status)
+          {
+            alert("Bills are already  Generated for this Month.");
+          }else{
           alert(`Bill Generated Successful`)
           const session = sessionStorage.getItem('sid')
-          window.location.href = `/dashboard?s=${session}`
-        }else{
-          alert("Bills are not Generated.");
+          window.location.href = `/adminDashboard?s=${session}`
+          }
         }
       }
     })
