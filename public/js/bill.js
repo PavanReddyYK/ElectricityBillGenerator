@@ -7,11 +7,11 @@ function displayBill() {
       billId: billId,
     },
     (data) => {
-      console.log(data);
+      // console.log(data);
       const dateBill = new Date(data[0].bill_generated_date);
-      const yearBill = dateBill.toLocaleDateString();
+      const yearBill = dateBill.toLocaleString(('en-us'),{day:'numeric',month:'short',year:'numeric'});
       const dueDateBill = new Date(data[0].bill_due_date);
-      const dueYearBill = dueDateBill.toLocaleDateString();
+      const dueYearBill = dueDateBill.toLocaleString(('en-us'),{day:'numeric',month:'short',year:'numeric'});
       document.getElementById("accountNumber").innerText = data[0].meter_num;
       document.getElementById("customerName").innerText = data[0].user_name;
       document.getElementById("billNumber").innerText = data[0].bill_id;
@@ -53,7 +53,7 @@ function displayBill() {
 
       for (let i = 1; i <= 4; i++) {
         if (document.getElementById(`amount-${i}`).innerText != "-") {
-          tAmount += Number.parseInt(
+          tAmount += Number.parseFloat(
             document.getElementById(`amount-${i}`).innerText
           );
         }
