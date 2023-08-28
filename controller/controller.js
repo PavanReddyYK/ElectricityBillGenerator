@@ -263,34 +263,9 @@ const deleteUser =(req,res)=>{
 }
 
 const generateBill = (req,res)=>{
-    // const date = req.body.date;
-    let date = new Date().toISOString().slice(0,10)
-    let month =date.slice(5,7)
-    let year =date.slice(0,4)
     const session = req.body.session;
-    data={
-        column_name:'bill_generated_date',
-  
-        table_name:'bill_info',
-  
-        order_column:'bill_generated_date',
-  
-        order:'desc',
-  
-        limit:1
-    }
-    helper.order1(data,(result)=>{
-        
-        if (result.length==1){
-            
-            let db_data=result[0].bill_generated_date
-            console.log(db_data.slice(0,4),year ,db_data.slice(5,7),month);
-            if (db_data.slice(0,4)==year && db_data.slice(5,7)==month){
-                console.log("hi")
-                res.send({status:false})
-            }else{
-                const data= {
-                   user_select : '*',
+    const data= {
+        user_select : '*',
         user_table_name : 'user_info',
         condition_user : `user_id `,
         session_select : 'user_id',
@@ -300,61 +275,75 @@ const generateBill = (req,res)=>{
     helper.sessionValidation(data, (result)=>{
         if(result.length == 1){
             if(result[0].user_type == 'admin'){
-                const billData = {
-                    select : 'user_id',
-                    table : 'user_info',
+                let date = new Date().toISOString().slice(0,10)
+                let month =date.slice(5,7)
+                let year =date.slice(0,4)
+                const data={
+                    column_name:'bill_generated_date',
+                    table_name:'bill_info',
+                    order_column:'bill_generated_date',
+                    order:'desc',
+                    limit:1
                 }
-                helper.fetchData(billData,(billResult)=>{
-                        let year = parseInt(date.slice(0,4));
-                        let day = parseInt(date.slice(8,10));
-                        let month = parseInt(date.slice(5,7));
-                        month = month == 12 ? 1 : month+1;
-                        year = month <= 12 ? year : year + 1;
-                        let out ;
-                        for(let i = 0 ; i < billResult.length ; i++){
-                            let billId = ('IN'+ Math.floor(Math.random()*100)+Math.random().toString(36).substr(2, 4)).toUpperCase();
-                            let meter = Math.floor(Math.random()*100000000);
-                            let consumption=Math.floor(Math.random()*1000);
-                            let status = i % 2==0 ? 1 : 0;
-                            const data={
-                                bill_id:`${billId}`,
-                                user_id:billResult[i].user_id,
-                                meter_num:meter,
-                                bill_generated_date:`${date}`,
-                                bill_due_date:`${year}-${month}-${day}`,
-                                consumption_units:consumption,
-                                amount_due:(110+ parseInt(calculateElectricityBill(consumption)))+(100+ parseInt(calculateElectricityBill(consumption)))*0.09,
-                                paid_status:status,
-                                paid_date:'not paid',
-                                tax:(110+ parseInt(calculateElectricityBill(consumption)))*0.09
+                helper.order1(data,(result)=>{
+                    if (result.length==1){
+                        let db_data=result[0].bill_generated_date
+                        if (db_data.slice(0,4)==year && db_data.slice(5,7)==month){
+                            res.send({status:true})
+                        }else{
+                            const billData = {
+                                select : 'user_id',
+                                table : 'user_info',
                             }
-                        const insertBill = {
-                            table : 'bill_info',
-                            columns : 'bill_id,user_id,meter_num,bill_generated_date,consumption_units,bill_due_date,amount_due,paid_status,paid_date,tax',
-                            values : `'${data.bill_id}',${data.user_id},${data.meter_num},'${data.bill_generated_date}',${data.consumption_units},'${data.bill_due_date}',${data.amount_due},${data.paid_status},'${data.paid_date}',${data.tax}`
+                            helper.fetchData(billData,(billResult)=>{
+                                    let year = parseInt(date.slice(0,4));
+                                    let day = parseInt(date.slice(8,10));
+                                    let month = parseInt(date.slice(5,7));
+                                    month = month == 12 ? 1 : month+1;
+                                    year = month <= 12 ? year : year + 1;
+                                    let out ;
+                                    for(let i = 0 ; i < billResult.length ; i++){
+                                        let billId = ('IN'+ Math.floor(Math.random()*100)+Math.random().toString(36).substr(2, 4)).toUpperCase();
+                                        let meter = Math.floor(Math.random()*100000000);
+                                        let consumption=Math.floor(Math.random()*1000);
+                                        let status = i % 2==0 ? 1 : 0;
+                                        const data={
+                                            bill_id:`${billId}`,
+                                            user_id:billResult[i].user_id,
+                                            meter_num:meter,
+                                            bill_generated_date:`${date}`,
+                                            bill_due_date:`${year}-${month}-${day}`,
+                                            consumption_units:consumption,
+                                            amount_due:(110+ parseInt(calculateElectricityBill(consumption)))+(100+ parseInt(calculateElectricityBill(consumption)))*0.09,
+                                            paid_status:status,
+                                            paid_date:'not paid',
+                                            tax:(110+ parseInt(calculateElectricityBill(consumption)))*0.09
+                                        }
+                                    const insertBill = {
+                                        table : 'bill_info',
+                                        columns : 'bill_id,user_id,meter_num,bill_generated_date,consumption_units,bill_due_date,amount_due,paid_status,paid_date,tax',
+                                        values : `'${data.bill_id}',${data.user_id},${data.meter_num},'${data.bill_generated_date}',${data.consumption_units},'${data.bill_due_date}',${data.amount_due},${data.paid_status},'${data.paid_date}',${data.tax}`
+                                    }
+                                    helper.insertData(insertBill,(insResult)=>{
+                        
+                                    });
+                                } 
+                                res.send({status:false});
+                            })
                         }
-                        helper.insertData(insertBill,(insResult)=>{
-            
-                        });
-                    } 
-                    res.send({status:true});
+                    }else{
+                        res.render(adminLogin.html)
+                    }
                 })
-            }else{
-                res.render('adminLogin.html');
             }
-        }else{
-            res.render('adminLogin.html');
+            else{
+                res.render(adminLogin.html)
+            }
+        }
+        else{
+            res.render(adminLogin.html)
         }
     })
-            }
-        }else{
-            res.sendStatus(400)
-        }
-    })
-  
-    
-    
-
 }
 
 
@@ -406,7 +395,7 @@ const fetchUser = (req, res) => {
       session_table_name: "session_info",
       condition_session: `session_id = "${sessionId}"`,
     };
-  
+
     helper.sessionValidation(fetchUserData, (fetchUserResult) => {
       if (fetchUserResult.length == 1) {
         res.send(fetchUserResult);
@@ -415,12 +404,12 @@ const fetchUser = (req, res) => {
       }
     });
   };
-  
+
   const fetchBills = (req, res) => {
     const user_id = req.body.user_id;
     const from_date = req.body.from_date;
     const to_date = req.body.to_date;
-  
+
     const fetchBillData = {
       bill_select: "*",
       bill_table_name: "bill_info",
@@ -432,7 +421,7 @@ const fetchUser = (req, res) => {
       fetch_bill_from: from_date,
       fetch_bill_to: to_date,
     };
-  
+
     helper.fetchBillData(fetchBillData, (fetchBillResult) => {
       if (fetchBillResult.length >= 1) {
         res.send(fetchBillResult);
@@ -442,8 +431,7 @@ const fetchUser = (req, res) => {
       }
     });
   };
-  
- 
+
 const displayBill = (req, res) => {
     const bill_id = req.body.billId;
     const fetchBillData = {
@@ -460,10 +448,10 @@ const displayBill = (req, res) => {
       }
     });
   };
-  
+
   const paid = (req, res) => {
     const billid = req.body.billId;
-    
+
     const updatePaid = {
       table: "bill_info",
       columns: `paid_status=1, paid_date='${
