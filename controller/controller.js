@@ -240,13 +240,13 @@ const saveUsers = (req,res)=>{
 const deleteUser =(req,res)=>{
     const user_id = req.body.user_id;
     const deleteUserData = {
-        table : "user_info",
+        table : "bill_info",
         condition : `user_id = ${user_id}`
     }
     helper.deleteRowData(deleteUserData,(delUserResult)=>{
         if(delUserResult){
             const deleteBillData = {
-                table : "bill_info",
+                table : "user_info",
                 condition : `user_id = ${user_id}`
             }
             helper.deleteRowData(deleteBillData,(delBillResult)=>{
@@ -265,44 +265,67 @@ const deleteUser =(req,res)=>{
 
 const generateBill = (req,res)=>{
     const date = req.body.date;
-    const billData = {
-        select : 'user_id',
-        table : 'user_info',
-    }
-    helper.fetchData(billData,(billResult)=>{
-            let year = parseInt(date.slice(0,4));
-            let day = parseInt(date.slice(8,10));
-            let month = parseInt(date.slice(5,7));
-            month = month == 12 ? 1 : month+1;
-            year = month <= 12 ? year : year + 1;
-            let out ;
-            for(let i = 0 ; i < billResult.length ; i++){
-                let billId = ('IN'+ Math.floor(Math.random()*100)+Math.random().toString(36).substr(2, 4)).toUpperCase();
-                let meter = Math.floor(Math.random()*100000000);
-                let consumption=Math.floor(Math.random()*1000);
-                let status = i % 2==0 ? 1 : 0;
-                const data={
-                    bill_id:`${billId}`,
-                    user_id:billResult[i].user_id,
-                    meter_num:meter,
-                    bill_generated_date:`${date}`,
-                    bill_due_date:`${year}-${month}-${day}`,
-                    consumption_units:consumption,
-                    amount_due:calculateElectricityBill(consumption),
-                    paid_status:status,
-                    paid_date:'not paid'
-                }
-            const insertBill = {
-                table : 'bill_info',
-                columns : 'bill_id,user_id,meter_num,bill_generated_date,consumption_units,bill_due_date,amount_due,paid_status,paid_date',
-                values : `'${data.bill_id}',${data.user_id},${data.meter_num},'${data.bill_generated_date}',${data.consumption_units},'${data.bill_due_date}',${data.amount_due},${data.paid_status},'${data.paid_date}'`
-            }
-            helper.insertData(insertBill,(insResult)=>{
+    const session = req.body.session;
 
-            });
-        } 
-        res.sendStatus(200);
+    const data= {
+        user_select : '*',
+        user_table_name : 'user_info',
+        condition_user : `user_id `,
+        session_select : 'user_id',
+        session_table_name : 'session_info',
+        condition_session : `session_id = "${session}"` 
+    }
+    helper.sessionValidation(data, (result)=>{
+        if(result.length == 1){
+            if(result[0].user_type == 'admin'){
+                const billData = {
+                    select : 'user_id',
+                    table : 'user_info',
+                }
+                helper.fetchData(billData,(billResult)=>{
+                        let year = parseInt(date.slice(0,4));
+                        let day = parseInt(date.slice(8,10));
+                        let month = parseInt(date.slice(5,7));
+                        month = month == 12 ? 1 : month+1;
+                        year = month <= 12 ? year : year + 1;
+                        let out ;
+                        for(let i = 0 ; i < billResult.length ; i++){
+                            let billId = ('IN'+ Math.floor(Math.random()*100)+Math.random().toString(36).substr(2, 4)).toUpperCase();
+                            let meter = Math.floor(Math.random()*100000000);
+                            let consumption=Math.floor(Math.random()*1000);
+                            let status = i % 2==0 ? 1 : 0;
+                            const data={
+                                bill_id:`${billId}`,
+                                user_id:billResult[i].user_id,
+                                meter_num:meter,
+                                bill_generated_date:`${date}`,
+                                bill_due_date:`${year}-${month}-${day}`,
+                                consumption_units:consumption,
+                                amount_due:calculateElectricityBill(consumption),
+                                paid_status:status,
+                                paid_date:'not paid'
+                            }
+                        const insertBill = {
+                            table : 'bill_info',
+                            columns : 'bill_id,user_id,meter_num,bill_generated_date,consumption_units,bill_due_date,amount_due,paid_status,paid_date',
+                            values : `'${data.bill_id}',${data.user_id},${data.meter_num},'${data.bill_generated_date}',${data.consumption_units},'${data.bill_due_date}',${data.amount_due},${data.paid_status},'${data.paid_date}'`
+                        }
+                        helper.insertData(insertBill,(insResult)=>{
+            
+                        });
+                    } 
+                    res.sendStatus(200);
+                })
+
+
+            }else{
+                res.render('adminLogin.html');
+            }
+        }else{
+            res.render('adminLogin.html');
+        }
     })
+
 }
 
 

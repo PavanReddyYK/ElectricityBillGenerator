@@ -31,6 +31,12 @@
 
   //-------------------------------------------------------------------------------------------------------------------------------
 
+  function consumerDash(){
+    const session = sessionStorage.getItem('sid');
+
+    window.location.href = `/consumerDashboard?s=${session}`;
+  }
+  
   function printBills(all, paid, pending){
 
     const dataTableOptions = {
@@ -43,17 +49,28 @@
     const allBills = [];
     const paidBills = [];
     const pendingBills = [];
+    const dateFormat = (date)=>{
+      if (date!=='not paid'){
+        let newDate = new Date(date).toLocaleString(('en-us'),{day:'numeric',month:'short',year:'numeric'})
+        return newDate
+      }else{
+        let newDate="not paid"
+        return newDate
+      }
+    }
 
     for(let bills of all){
-      allBills.push([bills.user_name,bills.user_id,bills.meter_num,bills.bill_id,bills.amount_due,bills.consumption_units,bills.bill_generated_date,bills.bill_due_date,bills.paid_date])
+      allBills.push([bills.user_name,bills.user_id,bills.meter_num,bills.bill_id,bills.amount_due,bills.consumption_units,dateFormat(bills.bill_generated_date),dateFormat(bills.bill_due_date),dateFormat(bills.paid_date)])
     }
 
     for(let bills of paid){
-      paidBills.push([bills.user_name, bills.user_id, bills.meter_num, bills.bill_id, bills.amount_due,bills.consumption_units, bills.bill_generated_date, bills.paid_date])
+      paidBills.push([bills.user_name, bills.user_id, bills.meter_num, bills.bill_id, bills.amount_due,bills.consumption_units,dateFormat( bills.bill_generated_date), dateFormat(bills.paid_date)])
     }
 
     for(let bills of pending){
-      pendingBills.push([bills.user_name, bills.user_id, bills.meter_num, bills.bill_id, bills.amount_due,bills.consumption_units, bills.bill_generated_date, bills.bill_due_date])
+      // const d = bills.bill_due_date.toLocalString(('en-us'),{day:'numeric',month:'short',year:'numeric'})
+      // console.log(d)
+      pendingBills.push([bills.user_name, bills.user_id, bills.meter_num, bills.bill_id, bills.amount_due,bills.consumption_units,dateFormat(bills.bill_generated_date),dateFormat(bills.bill_due_date)])
     }
 
     const allBillsData = $('#datatablesSimpleBill').DataTable(dataTableOptions);
@@ -71,9 +88,11 @@ $('.dataTables_wrapper table').addClass('text-center'); // This class aligns the
   //---------------------------------------------------------------------
 
   function generateBill(){
+    const session = sessionStorage.getItem('sid')
     const date = new Date().toISOString().slice(0,10)
     $.post('/generate',{
-       date : date
+       date : date,
+       session:session
     },(data)=>{
       const response = confirm("Do you want to Generate Bill?")
       if(response){
