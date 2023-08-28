@@ -27,53 +27,30 @@
         <p>Due Date: <span id="dueDate"></span></p>
         <p>Customer Address: <span id="customerAddress"></span></p>
       </div>
-      <table class="bill-items">
+      <table class="bill-items" >
         <thead>
           <tr>
-            <th>Units</th>
-            <th>Rate (INR)</th>
-            <th>Consumption</th>
-            <th>Amount (INR)</th>
+            <th>sl No</th>
+            <th>Description</th>
+            <th>Amount</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>0-50</td>
-            <td>4.00</td>
-            <td id="consumption-1">-</td>
-            <td id="amount-1">-</td>
-          </tr>
-          <tr>
-            <td>51-100</td>
-            <td>5.25</td>
-            <td id="consumption-2">-</td>
-            <td id="amount-2">-</td>
-          </tr>
-          <tr>
-            <td>101-200</td>
-            <td>6.80</td>
-            <td id="consumption-3">-</td>
-            <td id="amount-3">-</td>
-          </tr>
-          <tr>
-            <td>200<</td>
-            <td>7.65</td>
-            <td id="consumption-4">-</td>
-            <td id="amount-4">-</td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3" class="total-amount">Total Amount (INR)</td>
+            <td>1.</td>
+            <td id="desc"></td>
             <td id="totalamount"></td>
           </tr>
-        </tfoot>
+        </tbody>
       </table>
+      <div>
+        <a href="">Appendix</a>
+      </div>
       <div class="footer">
         <p>Thank you for using BESCOM Electricity Services.</p>
       </div>
       <div id="downloadBill">
-        <input type="button"  id="downloadButton" value="Download">
+        <input type="button"  id="downloadButton" value="Download" onclick="downloadBill()">
       </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>

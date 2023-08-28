@@ -7,11 +7,28 @@ function displayBill() {
       billId: billId,
     },
     (data) => {
-      // console.log(data);
+      console.log(data);
+      const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
       const dateBill = new Date(data[0].bill_generated_date);
-      const yearBill = dateBill.toLocaleString(('en-us'),{day:'numeric',month:'short',year:'numeric'});
+      const yearBill = dateBill.toLocaleDateString();
+      const month = monthNames[dateBill.getMonth()];
+      const year = dateBill.getFullYear();
       const dueDateBill = new Date(data[0].bill_due_date);
-      const dueYearBill = dueDateBill.toLocaleString(('en-us'),{day:'numeric',month:'short',year:'numeric'});
+      const dueYearBill = dueDateBill.toLocaleDateString();
+      document.getElementById('desc').innerText=`Electricity Bill for ${month} ${year}`
       document.getElementById("accountNumber").innerText = data[0].meter_num;
       document.getElementById("customerName").innerText = data[0].user_name;
       document.getElementById("billNumber").innerText = data[0].bill_id;
@@ -53,7 +70,7 @@ function displayBill() {
 
       for (let i = 1; i <= 4; i++) {
         if (document.getElementById(`amount-${i}`).innerText != "-") {
-          tAmount += Number.parseFloat(
+          tAmount += Number.parseInt(
             document.getElementById(`amount-${i}`).innerText
           );
         }
@@ -88,3 +105,30 @@ document.getElementById("downloadButton").addEventListener("click", async () => 
     URL.revokeObjectURL(url);
   }
 });
+
+async function downloadBill(){
+  document.getElementById('downloadButton').style.display="none"
+  window.print();
+  document.getElementById('downloadButton').style.display="flex"
+    // const htmlContent = document.documentElement.outerHTML;
+  
+    // const response = await fetch("/convertToPdf", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify({ htmlContent })
+    // });
+  
+    // if (response.ok) {
+    //   const blob = await response.blob();
+    //   const url = URL.createObjectURL(blob);
+    //   const a = document.createElement("a");
+    //   a.href = url;
+    //   a.download = "download.pdf";
+    //   a.click();
+    //   URL.revokeObjectURL(url);
+    // } else {
+    //   console.error("Error generating PDF:", response.status);
+    // }
+}

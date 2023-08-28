@@ -119,6 +119,7 @@ const fetchBillData = (data, callBack) => {
     const fetch_bill_to = data.fetch_bill_to;
   
     const fetchBillQuery = `SELECT ${bill_select} FROM ${bill_table_name} WHERE ${sub_query_condtion}(SELECT ${inner_query_get} FROM ${user_table_name} WHERE ${fetch_bill_condition}) AND ${fetch_bill_column_name} BETWEEN '${fetch_bill_from}' AND '${fetch_bill_to}' ORDER BY ${fetch_bill_column_name} ASC`;
+    console.log(fetchBillQuery)
     con.query(fetchBillQuery, (fetchBillErr, fetchBillResult) => {
       if (fetchBillErr) {
         console.log(fetchBillErr);
