@@ -55,17 +55,9 @@ function displayBill() {
         document.getElementById("amount-4").innerText =
           Math.ceil((consumption - 200) * 7.65);
       }
-      document.getElementById("tax").innerHTML = data[0].tax;  
-      let tAmount = 0;
+      document.getElementById("tax").innerHTML = data[0].tax;
 
-      for (let i = 1; i <= 4; i++) {
-        if (document.getElementById(`amount-${i}`).innerText != "-") {
-          tAmount += Number.parseInt(
-            document.getElementById(`amount-${i}`).innerText
-          );
-        }
-      }
-      document.getElementById("totalAmount").innerHTML = tAmount;  
+      document.getElementById("totalAmount").innerHTML =(data[0].amount_due);  
   }
   );
 }
