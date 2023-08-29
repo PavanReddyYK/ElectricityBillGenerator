@@ -17,16 +17,6 @@
       userData(data.userResult,data.adminId)
       userDetails = data.userResult;
     })
-
-    // $.post('/billDetails',
-    // {
-    //     session : session
-    // },
-    // (data)=>{
-    //     const result = separateData(data.info);
-    //     printData(result,data.user, data.admin_id)
-    // })
-
   })
 
   //-------------------------------------------------------------------------------------------------------------------------------
@@ -68,8 +58,6 @@
     }
 
     for(let bills of pending){
-      // const d = bills.bill_due_date.toLocalString(('en-us'),{day:'numeric',month:'short',year:'numeric'})
-      // console.log(d)
       pendingBills.push([bills.user_name, bills.user_id, bills.meter_num, bills.bill_id, bills.amount_due,bills.consumption_units,dateFormat(bills.bill_generated_date),dateFormat(bills.bill_due_date)])
     }
 
@@ -94,15 +82,17 @@ $('.dataTables_wrapper table').addClass('text-center'); // This class aligns the
        date : date,
        session:session
     },(data)=>{
+      console.log(data)
       const response = confirm("Do you want to Generate Bill?")
       if(response){
-        if(data){
+          if(data.status)
+          {
+            alert("Bills are already generated for this Month.");
+          }else{
           alert(`Bill Generated Successful`)
           const session = sessionStorage.getItem('sid')
-          window.location.href = `/dashboard?s=${session}`
-        }else{
-          alert("Bills are not Generated.");
-        }
+          window.location.href = `/adminDashboard?s=${session}`
+          }
       }
     })
 }
@@ -203,7 +193,7 @@ function deleteUser(){
   function userData(data,admin_id){
 
     const admin = document.getElementById('adminUser');
-    const fadmin = document.getElementById('foot-admin');
+    // const fadmin = document.getElementById('foot-admin');
         
     let paidTable, notPaidTable, moreThan3Table,allUserTable;
 
@@ -225,7 +215,7 @@ function deleteUser(){
 
       if (user.user_id == admin_id) {
         admin.innerHTML = '<li><a class="" href="#!">Name : '+user.user_name+'</a></li><li><a class="" href="#!">Phone : '+user.user_phone+'</a></li>';
-        fadmin.innerHTML = '<div class="small">Logged In as  </div>' + user.user_name + '';
+        // fadmin.innerHTML = '<div class="small">Logged In as  </div>' + user.user_name + '';
       }
 
       if(user.pending == 0){
@@ -337,7 +327,6 @@ function deleteUser(){
 
   }
 
-
   //==================================================NOT USING THIS============================
 
   function separateData(inputData) {
@@ -426,9 +415,7 @@ function deleteUser(){
     return result;
   }
 
-
   //--------------------------------------------------------------------------------------------
-
 
   function setActiveListItem(clickedId) {
     const listItems = document.querySelectorAll('.tab-bar li ');

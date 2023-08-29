@@ -43,7 +43,6 @@ const fetchData = (data, callBack) =>{
     })
 }
 
-
 const insertData = (data,callBack)=>{
     const table = data.table;
     const columns = data.columns;
@@ -127,8 +126,23 @@ const fetchBillData = (data, callBack) => {
       }
     });
   };
-  
 
+  const order1=(data,callBack)=>{
+        column_name=data.column_name;
+        table_name=data.table_name;
+        order_column=data.order_column;
+        order=data.order;
+        limit=data.limit
+        const query=`SELECT ${column_name} FROM ${table_name} ORDER BY ${order_column} ${order} LIMIT ${limit}`;
+        con.query(query,(err,result)=>{
+          if(err){
+              throw err;
+          }
+          else{
+              callBack(result);
+          }
+        })
+  }
 
 module.exports = {
     selectData,
@@ -137,5 +151,5 @@ module.exports = {
     fetchData,
     deleteRowData,
     updateData,
-    fetchBillData
+    fetchBillData,order1
 }

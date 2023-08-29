@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,6 +6,15 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link rel="stylesheet" href="../css/datatables.min.css" />  
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
     />
     <link
       rel="stylesheet"
@@ -21,22 +29,31 @@
     />
   </head>
   <body onload="consumerDashboard()">
+    <div class="welcome container d-flex justify-content-between  align-items-center">
+        <h4>Welcome</h4>
+        <button class="btn btn-danger" onclick="logoutConsumer()">logout</button>
+    </div>
     <div class="container">
       <div class="row">
         <div class="col-lg-3 first">
           <div class="card">
             <div class="row">
               <div class="col-5">
-                <span class="material-symbols-outlined"> person </span>
+                <div class="icon-line">
+                  <span class="material-symbols-outlined person"> person </span>
+                </div>
+                <div class="icon-line">
+                  <span class="material-symbols-outlined phone">phone</span>
+                </div>
               </div>
               <div class="col-7">
-                <h4 id="name"></h4>
-                <h4 id="phone"></h4>
+                <h4><input type="text" id="name" disabled  /></h4>
+                <h4><input type="text" id="phone" disabled /></h4>
               </div>
             </div>
           </div>
           <hr />
-          <div id="range">
+          <div class="range">
             <h5>From:</h5>
             <select id="monthSelectStart">
               <option value="">Select</option>
@@ -61,7 +78,7 @@
             </select>
           </div>
           <br />
-          <div id="range">
+          <div class="range">
             <h5>To:</h5>
             <select id="monthSelectEnd">
               <option value="">Select</option>
@@ -86,53 +103,32 @@
             </select>
           </div>
           <br />
-          <button
-            type="button"
-            onclick="billDetails(currentPage)"
-            id="button"
-          >
+          <button type="button" onclick="billDetails()" id="button">
             Select
           </button>
         </div>
-        <div class="col-lg-9">
+        <div class="col-lg-9" class="tablist">
           <h3>List of Bills</h3>
           <br />
-          <table class="table table-responsive-lg">
+          <table  class="table table-bordered table-responsive-sm" id="datatables">
             <thead>
               <tr>
-                <th scope="col">SL.No</th>
-                <th scope="col">Month</th>
-                <th scope="col">Unit Consumed</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Status</th>
-                <th scope="col">Payment</th>
-                <th scope="col">BillView</th>
+                <th class="text-center">Month</th>
+                  <th class="text-center">Unit Consumed</th>
+                  <th class="text-center">Amount</th>
+                  <th class="text-center">Status</th>
+                  <th class="text-center">Payment</th>
+                  <th class="text-center">BillView</th>
               </tr>
             </thead>
-            <tbody id="billTable"></tbody>
+            <tbody id="billTable">
+            </tbody>
           </table>
         </div>
       </div>
-      <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-end">
-          <li class="page-item">
-            <a class="page-link" id="prevPage" href="#">Previous</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" id="page1" href="#">1</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" id="page2" href="#">2</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" id="nextPage" href="#">Next</a>
-          </li>
-        </ul>
-        <div id="logout">
-            <input type="button" value="Logout" onclick="logoutConsumer()">
-        </div>
       </nav>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
@@ -141,6 +137,8 @@
       integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
       crossorigin="anonymous"
     ></script>
+    <script src="../js/datatables.min.js"></script>
+
     <script src="../js/consumerDashboard.js"></script>
   </body>
 </html>

@@ -1,4 +1,18 @@
-body {
+.container
+{
+  width:30vw;
+  height: auto;
+  margin: 2vh auto;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color:  #DFFFFF;
+  box-shadow: 0 2px 5px black;
+}
+.xyz{
+float: right;
+}
+
+/* body {
   font-family: Arial, sans-serif;
 }
 .bill-container {
@@ -40,4 +54,4 @@ a{
   display: flex;
   justify-content: end;
 
-}
+} */

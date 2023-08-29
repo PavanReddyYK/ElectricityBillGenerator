@@ -8,33 +8,18 @@ function consumerDashboard() {
     },
     (data) => {
       sessionStorage.setItem("uid", data[0].user_id);
-      document.getElementById("name").innerText = data[0].user_name;
-      document.getElementById("phone").innerText = data[0].user_phone;
+      document.getElementById("name").value = data[0].user_name;
+      document.getElementById("phone").value = data[0].user_phone;
     }
   );
 }
 
-const recordsPerPage = 6;
-let currentPage = 1;
-let totalRecords = 0;
-
-function updatePagination() {
-  const totalPages = Math.ceil(totalRecords / recordsPerPage);
-  const prevPage = document.getElementById("prevPage");
-  prevPage.classList.toggle("disabled", currentPage === 1);
-  const nextPage = document.getElementById("nextPage");
-  nextPage.classList.toggle("disabled", currentPage === totalPages);
-}
-
-function billDetails(page) {
+function billDetails() {
   const user_id = sessionStorage.getItem("uid");
   const startMonth = document.getElementById("monthSelectStart").value;
   const startYear = document.getElementById("yearSelectStart").value;
   const endMonth = document.getElementById("monthSelectEnd").value;
   const endYear = document.getElementById("yearSelectEnd").value;
-
-  const startRecord = (page - 1) * recordsPerPage;
-  const endRecord = startRecord + recordsPerPage - 1;
 
   if (
     (startMonth == endMonth &&
@@ -64,85 +49,45 @@ function billDetails(page) {
         to_date: `${endYear}-${endMonth}-05`,
       },
       (data) => {
-        totalRecords = data.length;
-        const currentPageData = data.slice(startRecord, endRecord + 1);
-        let billData = "";
-        let s = startRecord + 1;
-        let paidStatus;
-        for (let i = 0; i < currentPageData.length; i++) {
-          const monthNames = [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-          ];
-          const date = new Date(currentPageData[i].bill_generated_date);
-          const year = date.getFullYear();
-          const month = monthNames[date.getMonth()];
-          if (currentPageData[i].paid_status == 1) {
-            paidStatus = "paid";
-          } else {
-            paidStatus = "not paid";
-          }
+        const dataTableOptions = {
+          searchable: true,
+          sortable: true,
+          perPage: 5,
+          perPageSelect: [5, 10,],
+        };
+        const allBills = [];
 
-          billData += `<tr>
-    <td>${s}</td>
-    <td>${month} ${year}</td>
-    <td>${currentPageData[i].consumption_units}</td>
-    <td>${Math.round(currentPageData[i].amount_due)}</td>
-    <td>${paidStatus}</td>
-    <td><input type="button" onclick="payment('${
-      currentPageData[i].bill_id
-    }')" value="Pay" ${currentPageData[i].paid_status == 1 ? 'disabled' : ''}/></td>
-    <td><input type="button" onclick="fetchSingleBill('${
-      currentPageData[i].bill_id
-    }')" value="ViewBill"/></td>
-     </tr>`;
-          s++;
+        for (let bill of data) {
+
+            const formattedDate = monthFormat(bill.bill_generated_date);
+            const paidStatus = bill.paid_status ? "paid" : "not paid";
+            const payButton = bill.paid_status ? '<button disabled>Pay</button>' : `<button class="btn btn-info" onClick="payment('${bill.bill_id}')" enabled>Pay</button>`;
+
+            allBills.push([formattedDate, bill.consumption_units, bill.amount_due, paidStatus, payButton,`<button class="btn btn-info" onClick="fetchSingleBill('${bill.bill_id}')">view bill</button>`]);
         }
-        document.getElementById("billTable").innerHTML = billData;
-        updatePagination();
+
+        const allBillsData = $('#datatables').DataTable(dataTableOptions);
+        allBillsData.clear().rows.add(allBills).draw();
+
       }
     );
-  } else {
-    alert("Please select a valid month and year to view the details.");
   }
 }
-
-document.getElementById("prevPage").addEventListener("click", function () {
-  if (currentPage > 1) {
-    currentPage--;
-    billDetails(currentPage);
+const dateFormat = (date)=>{
+  if (date!=='not paid'){
+    let newDate = new Date(date).toLocaleString(('en-us'),{day:'numeric',month:'short',year:'numeric'})
+    return newDate;
+  }else{
+    let newDate="not paid"
+    return newDate;
   }
-});
+}
+const monthFormat = (date)=>{
+  let newDate = new Date(date).toLocaleString(('en-us'),{month:'long',year:'numeric'})
+  return newDate;
+}
 
-document.querySelectorAll("#page1, #page2").forEach(function (pageLink) {
-  pageLink.addEventListener("click", function () {
-    const pageNumber = parseInt(pageLink.innerText);
-    if (!isNaN(pageNumber)) {
-      currentPage = pageNumber;
-      billDetails(currentPage);
-    }
-  });
-});
-
-document.getElementById("nextPage").addEventListener("click", function () {
-  const totalPages = Math.ceil(totalRecords / recordsPerPage);
-  if (currentPage < totalPages) {
-    currentPage++;
-    billDetails(currentPage);
-  }
-});
-
-function fetchSingleBill(billId) {
+const fetchSingleBill=(billId)=> {
   sessionStorage.setItem("bid", billId);
   console.log("fetching");
   window.location.href = `/fetchSingleBill`;
@@ -157,7 +102,7 @@ function payment(billId) {
     },
     (data) => {
       if (data) {
-        billDetails(currentPage);
+        billDetails();
       }
     }
   );
@@ -171,7 +116,6 @@ function logoutConsumer(){
   },
   (data)=>{
     if(data=='OK'){
-      // alert(`Logged out successfully`)
       window.location='http://localhost:4000/'
       sessionStorage.removeItem('sid')
       sessionStorage.removeItem('uid')
