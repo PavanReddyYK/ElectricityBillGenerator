@@ -2,8 +2,10 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const controller = require('./controller/controller.js')
+const cors = require('cors')
 
 const app = express();
+app.use(cors())
 
 app.use(express.static(path.join(__dirname,'public')));
 app.use(bodyParser.urlencoded({extended: true}))

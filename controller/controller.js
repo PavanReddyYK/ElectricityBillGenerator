@@ -469,26 +469,27 @@ const displayBill = (req, res) => {
   };
   
   const pdfConverter = async (req, res) => {
-    // try {
-    //   const { htmlContent } = req.body;
-    //   const browser = await puppeteer.launch();
-    //   const page = await browser.newPage();
-    //   const cssPath = "./public/css/bill.css";
-    //   const cssContent = require("fs").readFileSync(cssPath, "utf8");
-    //   const modifiedHtmlContent = `<style>${cssContent}</style>${htmlContent}`;
-    //   await page.setContent(modifiedHtmlContent);
-    //   const pdfBuffer = await page.pdf();
-    //   await browser.close();
-    //   res.setHeader("Content-Type", "application/pdf");
-    //   res.setHeader(
-    //     "Content-Disposition",
-    //     "attachment; filename=ElectricityBill.pdf"
-    //   );
-    //   res.send(pdfBuffer);
-    // } catch (error) {
-    //   console.error(error);
-    //   res.status(500).send("Error converting to PDF");
-    // }
+   
+ // const htmlContent = req.body.htmlContent;
+    // const options = {
+    //   format: "Letter",
+    //   orientation: "portrait"
+    // };
+ 
+    // pdf.create(htmlContent, options).toBuffer((err, buffer) => {
+    //   if (err) {
+    //     console.error("Error generating PDF:", err);
+    //     console.log(buffer)
+    //     return res.status(500).send("Error generating PDF");
+    //   }
+ 
+    //   res.set({
+    //     "Content-Type": "application/pdf",
+    //     "Content-Disposition": "attachment; filename=download.pdf"
+    //   });
+    //   res.attachment('download.pdf');
+    //   res.send(buffer);
+    // });
   };
   
   const fetchSingleBill = (req, res) => {

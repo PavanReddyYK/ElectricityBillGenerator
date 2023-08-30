@@ -64,5 +64,27 @@ function displayBill() {
 function downloadBill(){
   document.getElementById("downloadButton").style.display="none";
   window.print()
-  document.getElementById("downloadButton").style.display="flex";
+  document.getElementById("downloadButton").style.display="flex"; 
+  
+  // const htmlContent = document.documentElement.outerHTML;
+    // const response = await fetch("/convertToPdf", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify({ htmlContent })
+    // });
+ 
+    // if (response.ok) {
+    //   const blob = await response.blob();
+    //   const url = URL.createObjectURL(blob);
+    //   const a = document.createElement("a");
+    //   a.href = url;
+    //   a.download = "download.pdf";
+    //   a.click();
+    //   URL.revokeObjectURL(url);
+    // } else {
+    //   console.error("Error generating PDF:", response.status);
+    // }
 }
+
