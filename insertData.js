@@ -27,8 +27,6 @@ var con = mysql.createConnection({
     database :'electricity'
 })
 
-
-
 con.connect((err) => {
     if (err) throw err;
     console.log("Database connected....");

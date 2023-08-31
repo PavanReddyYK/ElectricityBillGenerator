@@ -1,6 +1,6 @@
 const helper = require('../helper/helper.js');
 const {uuid} = require('uuidv4');
-const puppeteer = require("puppeteer");
+// const puppeteer = require("puppeteer");
 
 const login = (req,res)=>{
     res.render('adminLogin.html')
@@ -45,6 +45,61 @@ const loginPage = (req,res)=>{
                         }
                     }
                 })
+        }else{
+            res.status(401).json({isValid : false});
+        }
+    })
+}
+
+const loginPageV4 = (req,res)=>{
+    const phone = req.body.phone;
+    const password = req.body.password
+    const data= {
+        select:'*',
+        table : 'user_info',
+        condition : `user_phone = "${phone}" && user_password = "${password}"`
+    }
+    helper.selectData(data,(userResult)=>{
+        if(userResult.length==1){
+            const allData= {
+                select:'*',
+                table : 'bill_info',
+            }
+            helper.fetchData(allData,(allResult)=>{
+                if(allResult){
+                const userid = userResult[0].user_id;
+                const userType = userResult[0].user_type=='admin'?true:false
+                const data = {
+                    select:'*',
+                    table : 'session_info',
+                    condition : `user_id = ${userid}`
+                };
+                helper.selectData(data,(session)=>{
+                    delete userResult[0].user_password
+                    if(session.length==1){
+                        const session_id = session[0].session_id;
+                        res.json({session:session_id, isAdmin:userType, isValid : true, user:userResult[0], allBills:allResult});
+                    }else{
+                        if(session.length==0){
+                            const sessionId = uuid();
+                            const data = {
+                                table : "session_info",
+                                columns : "session_id , user_id",
+                                values : `"${sessionId}" , ${userResult[0].user_id}`
+                            }
+                            helper.insertData(data,(insertResult)=>{
+                                if(insertResult){
+                                    res.send({session :sessionId, isAdmin:userType, isValid:true,user:userResult[0],allBills:allResult})
+                                }else{
+                                    res.sendStatus(500);
+                                }
+                            });
+                        }
+                    }
+                })
+            }
+            })
+                
         }else{
             res.json({isValid : false});
         }
@@ -515,5 +570,6 @@ module.exports = {
     displayBill,
     fetchSingleBill,
     pdfConverter,
+    loginPageV4,
     paid,
 }
