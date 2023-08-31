@@ -5,7 +5,7 @@ const controller = require('./controller/controller.js')
 const cors = require('cors')
 
 const app = express();
-app.use(cors())
+app.use(cors());
 
 app.use(express.static(path.join(__dirname,'public')));
 app.use(bodyParser.urlencoded({extended: true}))
@@ -15,6 +15,10 @@ app.use(express.json())
 
 app.get('/',(req,res)=>{
     controller.login(req,res);
+})
+
+app.post('/loginPageV2',(req,res)=>{
+    controller.loginPageV4(req,res);
 })
 
 app.post('/loginPage',(req,res)=>{
