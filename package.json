@@ -14,7 +14,8 @@
     "uuidv4": "^6.2.13"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "build":"npm i"
   },
   "name": "electricitybillgenerator",
   "description": "",
